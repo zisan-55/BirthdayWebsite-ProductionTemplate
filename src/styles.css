@@ -582,6 +582,10 @@ body:has(dialog[open]) { overflow: hidden; }
   .birthday-carousel__controls { left: calc(6% + 338px + 14px); }
 }
 
+@media (max-width: 480px) {
+  .birthday-carousel__controls { left: min(calc(6% + 53.5vw + 12px), calc(100% - 60px - clamp(88px,24vw,116px))); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .reveal-scene[data-phase="celebrating"] .reveal-title__letter,
