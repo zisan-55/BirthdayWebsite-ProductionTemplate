@@ -1,0 +1,86 @@
+{
+  "siteId": "<unique-client-site-id>",
+  "recipient": {
+    "name": "<recipient-name>",
+    "nickname": "<recipient-nickname>",
+    "age": 0,
+    "birthdayDate": "<YYYY-MM-DD>",
+    "birthdayTime": "<HH:MM:SS>",
+    "timezone": "<IANA-timezone>"
+  },
+  "sender": {
+    "name": "<sender-name>"
+  },
+  "messages": {
+    "reveal": null,
+    "introduction": null,
+    "closing": null,
+    "signature": null
+  },
+  "photos": [
+    {
+      "src": "/images/client/photo-01.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-02.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-03.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-04.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-05.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-06.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-07.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-08.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-09.jpg",
+      "alt": null,
+      "caption": null
+    },
+    {
+      "src": "/images/client/photo-10.jpg",
+      "alt": null,
+      "caption": null
+    }
+  ],
+  "music": {
+    "src": null,
+    "title": null
+  },
+  "scrapbookNotes": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]
+}
