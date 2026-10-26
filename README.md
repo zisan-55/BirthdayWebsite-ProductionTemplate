@@ -10,7 +10,7 @@ Reusable six-scene birthday website with centralized client configuration, deter
 4. Commit and push the customer repository when authorized.
 5. In the customer repository, set Settings → Pages → Source to GitHub Actions. Set repository Actions variable ENABLE_PAGES_DEPLOY=true only after client approval, then push main or run the workflow.
 
-The production template repository is explicitly excluded from deployment. Its main pushes/manual runs perform validation, tests and build. Future client deployment jobs require ENABLE_PAGES_DEPLOY=true. Account/plan and Pages permissions must support the customer's repository visibility.
+Deployment is opt-in for every repository, including this production template. Main pushes/manual runs perform validation, tests and build; deployment additionally requires the Actions repository variable ENABLE_PAGES_DEPLOY=true and Pages source set to GitHub Actions. Future client repositories need their own configuration and deployment approval. Account/plan and Pages permissions must support the repository visibility.
 
 ## Local commands
 
