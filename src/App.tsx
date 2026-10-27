@@ -782,7 +782,7 @@ function UniverseScene({ onPhotoOpen, onBack, onReplay }: {
     const photo = sourcePhotos[index % sourcePhotos.length];
     const column = index % columnPositions.length;
     const row = Math.floor(index / columnPositions.length);
-    const generation = Math.floor(index / sourcePhotos.length);
+    const generation = Math.floor(index / birthdayConfig.photoUniverse.layoutPhotoCount);
     const jitterX = ((index * 7) % 5 - 2) * 1.4;
     const jitterY = ((index * 11) % 5 - 2) * 1.1;
     return {

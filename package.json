@@ -8,9 +8,11 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "validate": "node scripts/validate-client.mjs",
-    "prebuild": "npm run validate",
-    "build:check": "npm run validate && tsc -b && vite build --outDir .build-check",
-    "test": "node scripts/test-personalization.mjs"
+    "prebuild": "npm run validate && npm test",
+    "build:check": "npm run validate && npm test && tsc -b && vite build --outDir .build-check --emptyOutDir false",
+    "test": "node scripts/test-personalization.mjs",
+    "test:packages": "node scripts/test-personalization.mjs --build-packages",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "react": "^18.3.1",

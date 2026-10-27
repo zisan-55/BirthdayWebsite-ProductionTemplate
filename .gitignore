@@ -31,3 +31,6 @@ coverage/
 *.bak
 .vscode/
 .idea/
+
+# Disposable synthetic media created by personalization tests
+public/.photo-system-test-*/

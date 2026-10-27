@@ -1,48 +1,65 @@
 # Client personalization guide
 
-## Scope and safety
+## Scope
 
-Create a separate authorized customer repository using GitHub’s Use this template feature, then clone it. Confirm origin belongs to that customer repository before committing or pushing. Never modify the original repository or local master/development templates. The production template starts independent history without any copied remote.
+This guide applies to BirthdayWebsite-ProductionTemplate. Edit only the authorized repository for the current client. Never replace another repository’s codebase, change its origin, or publish/commit/push without authorization. The existing six scenes, layouts, animations, relative Vite base and deployment workflow are preserved.
 
+## Central intake
 
-## One source of client information
+Edit src/config/client.json. Keep recipient name/nickname, turning age, birthday date (YYYY-MM-DD), 24-hour time, IANA timezone and independent sender name there. siteId must be unique per website (3–80 lowercase letters, numbers or hyphens) and stable across updates. The curtain key includes siteId and birthday date. The source defaults stay in birthdayConfig.ts; do not edit component code or CSS for client personalization.
 
-Edit `src/config/client.json`. `src/config/birthdayConfig.ts` retains the original scene settings, default copy, slot layouts, rotations, stickers and positions, then applies client data. Do not edit App.tsx or styles.css for routine personalization.
+The checked-in fixture uses generic identities and neutral SVG illustrations. All ten existing sample entries are labeled Regular Photos; no couple classification has been inferred from the pictures. Replace the fixture with client-approved data before delivery. CLIENT_INFO.example.json is a placeholder-only intake example; it deliberately fails validation until completed.
 
-The production fixture uses generic recipient/sender labels and ten neutral SVG illustrations, with no customer photographs. `CLIENT_INFO.example.json` is the customer intake skeleton with placeholders and deliberately fails validation until completed. Never deploy the intake skeleton or the generic template fixture as a paid client site.
+## Exactly 10, 15 or 20 unique photos
 
-1. Make a separate client copy when authorized. Assign a unique `siteId`, 3–80 lowercase letters, digits or hyphens, starting with a letter or digit. Keep it stable across updates. The curtain key is `birthday-curtain-opened:<siteId>:<birthdayDate>`. All storage operations, including replay, use this namespace. Old unnamespaced markers are ignored. Uniqueness across sites must be enforced by the operator or future client registry; an isolated local build cannot check other sites.
-2. Fill recipient name, nickname, turning age (integer 1–150), birthday date (`YYYY-MM-DD`), time (`HH:MM` or `HH:MM:SS`, 24-hour), and IANA timezone such as `Asia/Dhaka`. Impossible dates and nonexistent local DST times fail. For ambiguous DST times, the existing countdown resolver chooses an occurrence; confirm the intended instant with the client. No birth year is required.
-3. Set `sender.name` independently. The closing note displays `messages.signature, sender.name`. Recipient nickname continues to be used for the cinema production label.
-4. Keep each message (`reveal`, `introduction`, `closing`, `signature`) null for its existing default or supply a nonempty custom string. Null is a JSON value, not the string "null". Other headings and navigation remain in birthdayConfig.ts.
-5. Put exactly 10, 20 or 35 distinct photos inside `public/images/client/`. List them in approved order with paths such as `/images/client/photo-01.jpg`. Paths are case-sensitive on GitHub Actions. JPG, JPEG, PNG, WebP, AVIF, GIF and SVG are supported. Supply optional `alt` and `caption` strings, or null for the existing slot text. A custom caption follows its photo when reused. Review default relationship-specific captions and notes with the client. Local nonempty files are required; remote URLs, traversal and files outside public are rejected. Files are not decoded by the validator: inspect the actual images as part of visual review.
-6. `scrapbookNotes` contains eight entries in page order. Each is null for the existing notes, or exactly two nonempty strings. Pages retain their titles, layout, stickers and two photos each.
-7. For default music leave `music.src` and `music.title` null. Custom music goes inside `public/audio/` and needs both a local `src` and display `title`. Supported extensions: MP3, WAV, OGG, M4A, AAC. Confirm browser playback; file existence alone does not establish codec compatibility. Audio artwork follows the first client photo. Reveal background remains the original `public/images/hero-dusk.svg`.
+Set photoPackage to 10, 15 or 20. photos is an object with two required arrays: regular (Regular Photos) and couple (Couple Photos). Either may be empty, but their combined count MUST equal photoPackage. Couple photos are included in the package, not an extra allowance. For example, a 15-photo package may contain 10 regular + 5 couple photos, or 15 regular + 0 couple photos.
 
-## Deterministic photo allocation
+Each photo is { src, alt, caption }; alt and caption may be null to retain the existing slot text. Use approved local files inside public, for example /images/client/regular-01.jpg. Supported types: JPG/JPEG, PNG, WebP, AVIF, GIF and SVG. Duplicate paths/aliases across either category and byte-identical duplicate files are rejected. Visual near-duplicates or resized copies require human review. Remote media, path traversal, missing/empty files, malformed entries, unsupported counts and count mismatches stop validation. Paths must have exact case for Linux CI.
 
-One 41-slot sequence cycles through the ordered client list, then fills: carousel 5, gallery 10, scrapbook 16 (8 pages × 2), Photo Universe 10. Each slot keeps its existing ID and layout metadata. Every supplied photo appears at least once for all supported packages. The list wraps when needed; distinct source validation and cyclic allocation avoid adjacent duplicates in the sequence, within each section, and at cyclic section boundaries with these package sizes. Spatial neighbors in the floating layouts may still share an image across different sections. No randomness or extra layout slots are introduced. The hero background is separate.
+### Deterministic section allocation
 
-## Validation and preview
+| Section | Frames | Allocation |
+|---|---:|---|
+| Introduction carousel | 5 | Regular first, then couple fallback |
+| Memories | 10 | Regular first, then couple fallback |
+| Scrapbook | 16 across 8 pages | Couple first, then regular fallback |
+| Photo Universe | 35 | Every supplied photo once in regular-then-couple order, followed by cyclic reuse |
 
-From the client copy run:
+Order within each category is preserved. “Couple first” means the scrapbook starts with supplied couple photos, then uses regular photos when capacity remains, then cycles if needed. If more than 16 couple photos are supplied, the first 16 fill the scrapbook; all still appear in the Universe. Photos repeat as needed, without adjacent duplicate sources or cyclic boundary repeats for these package sizes. No random selection is used. A custom caption/alt follows its image across sections. The existing frame IDs, rotations, sizes, stickers and page metadata are retained.
+
+The Universe now receives all 35 assigned entries, rather than ten source photos. Its renderer keeps the original ten-template layout cycle separately, preserving every frame’s x/y/z, scale, rotation and depth layer. No new frames, animations or layout geometry are added.
+
+## Messages, scrapbook and music
+
+Leave messages.reveal, introduction, closing or signature null for existing defaults, or provide nonempty custom strings. scrapbookNotes has eight entries; each is null for default notes or exactly two custom strings. Review relationship-specific default captions/notes with the client.
+
+Leave music.src and music.title null for the existing default birthday song. Custom local music requires src plus title. music.artwork may be null for the repository’s existing policy or a local supported image path for an explicit override. The first photo in Regular Photos, or the first Couple Photo when regular is empty, remains the default music artwork. The persistent music player’s controls and scene behavior are unchanged.
+
+The reveal background remains the included hero-dusk.svg and does not count toward the photo package. Photo artwork reuses existing/default media rather than requiring an extra package photo.
+
+## Migration from earlier configuration
+
+The old flat photos array and 10/20/35 packages are replaced. Choose 10, 15 or 20 explicitly, move existing entries into photos.regular and photos.couple, and remove duplicate entries. Keep couple photos inside the selected total. A 35-photo intake is no longer accepted: select 20 or fewer approved unique photos before building. Existing unrelated client projects are not migrated automatically.
+
+## Verification before publication
+
+Run in this checkout:
 
 ```sh
 npm ci
 npm run validate
 npm test
+npm run typecheck
+npm run test:packages
 npm run build:check
-npm run dev
 ```
 
-`npm run build` automatically runs `prebuild` validation before TypeScript and Vite. Invalid fields, duplicate photo sources, wrong counts, missing/empty media, invalid date/time/timezone, malformed notes, or missing sender stop the build with labeled errors. A failure must be corrected before delivery. Use the supported npm build command, not a direct `vite build` that bypasses npm lifecycle checks. Keep dependency lockfile versions consistent.
+npm test checks all 48 package/category splits, invalid data, 5/10/16/35 capacities, couple priority, complete Universe coverage, custom captions/notes, artwork policy and pre-change layout snapshots. test:packages additionally creates full Vite production builds for 10-, 15- and 20-photo synthetic client fixtures under .build-check/packages. Synthetic fixture media is created temporarily inside this checkout and cleaned afterward; real client files are untouched.
 
-`build:check` validates and compiles production output into ignored `.build-check/`. For production, the existing `npm run build` writes `dist/`. Vite `base: "./"` remains unchanged. GitHub Actions runs npm ci, npm test and npm run build. Pages artifact deployment is opt-in through the Actions repository variable ENABLE_PAGES_DEPLOY=true for both this template and future client repositories. Configure the repository’s Pages source as GitHub Actions before deployment. This template may be deployed with its generic content for testing; each future client requires separate setup and approval.
+The supported npm run build runs prebuild validation and tests before TypeScript and Vite. Invalid data exits nonzero with labeled errors before the production build. Do not bypass it with direct vite build for delivery. Its existing workflow runs tests and builds before deployment. ENABLE_PAGES_DEPLOY=true and Pages source GitHub Actions remain required. Vite base stays ./ for GitHub Pages project paths.
 
-Review all six scenes on desktop and mobile, countdown/preview/replay, sender signature, transitions, carousel, gallery lightbox, all scrapbook pages, Photo Universe, and music play/pause/seek/volume. Confirm local media and messages are approved. Automated checks do not replace this browser review.
+The mobile-only Page 3 button below the carousel is preserved. Review desktop/tablet/phone layouts, all eight scrapbook pages, carousel/lightbox, Universe and music playback in a browser before client delivery. Automated file checks do not decode every image or prove audio codec/browser support.
 
-## Generated output and private material
+## Git and private files
 
-This production template starts a new Git history without the original tracked dist files. CI builds dist and uploads it as a Pages artifact. No original repository cleanup is necessary. Do not commit dependencies, generated builds, TypeScript metadata, credentials, private intake forms or test evidence. CLIENT_INFO.example.json contains placeholders only and may be committed as documentation.
-
-.gitignore covers common secrets and generated/local artifacts. Inspect the exact publication manifest before committing. Never put secrets in client.json or public assets: they are publicly viewable when deployed.
+.gitignore excludes dependencies, local secrets and generated verification output. Generated dist is untracked. Do not commit private intake forms, credentials, customer photos without authorization, test evidence or generated output. Review staged file names and correct origin before any commit/push. Changes require a separate report and owner approval before publication.

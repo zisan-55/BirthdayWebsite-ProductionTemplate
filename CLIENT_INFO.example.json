@@ -1,5 +1,5 @@
 {
-  "siteId": "<unique-client-site-id>",
+  "siteId": "<unique-site-id>",
   "recipient": {
     "name": "<recipient-name>",
     "nickname": "<recipient-nickname>",
@@ -17,61 +17,66 @@
     "closing": null,
     "signature": null
   },
-  "photos": [
-    {
-      "src": "/images/client/photo-01.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-02.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-03.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-04.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-05.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-06.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-07.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-08.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-09.jpg",
-      "alt": null,
-      "caption": null
-    },
-    {
-      "src": "/images/client/photo-10.jpg",
-      "alt": null,
-      "caption": null
-    }
-  ],
+  "photos": {
+    "regular": [
+      {
+        "src": "/images/client/regular-1.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/regular-2.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/regular-3.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/regular-4.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/regular-5.jpg",
+        "alt": null,
+        "caption": null
+      }
+    ],
+    "couple": [
+      {
+        "src": "/images/client/couple-1.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/couple-2.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/couple-3.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/couple-4.jpg",
+        "alt": null,
+        "caption": null
+      },
+      {
+        "src": "/images/client/couple-5.jpg",
+        "alt": null,
+        "caption": null
+      }
+    ]
+  },
   "music": {
     "src": null,
-    "title": null
+    "title": null,
+    "artwork": null
   },
   "scrapbookNotes": [
     null,
@@ -82,5 +87,6 @@
     null,
     null,
     null
-  ]
+  ],
+  "photoPackage": 10
 }

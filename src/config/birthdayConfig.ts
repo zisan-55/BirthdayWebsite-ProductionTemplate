@@ -1,12 +1,17 @@
-import client from "./client.json";
-import { distributePhotos } from "../lib/distributePhotos";
+import clientData from "./client.json";
+import type { ClientConfig, ClientPhoto } from "./clientTypes";
+import { allocatePhotoSections, allClientPhotos } from "../lib/distributePhotos";
+
+// The prebuild validator checks this JSON before production compilation.
+const client = clientData as ClientConfig;
+export const CLIENT_ARTWORK_MODE = "first-photo" as const;
 
 // ============================================================================
-// PERSONALIZE THIS FILE. Names, dates, copy, image paths, and scene content
-// live here so the layout and interaction code can stay untouched.
+// CLIENT INTAKE: edit src/config/client.json for names, dates, messages and photos.
+// This file retains scene defaults and frame metadata; layout code stays untouched.
 // ============================================================================
 
-// QUICK PERSONALIZATION: change these values for each new birthday page.
+// Recipient aliases come from the centralized client intake.
 export const BIRTHDAY_NAME = client.recipient.name;
 export const BIRTHDAY_NICKNAME = client.recipient.nickname;
 export const BIRTHDAY_AGE = client.recipient.age;
@@ -182,29 +187,35 @@ const defaults = {
 } as const;
 
 
-// Keep layout metadata and slot IDs; replace only client content.
-const photos = distributePhotos(client.photos, 41);
-let cursor = 0;
-function fill<T extends { src: string; alt: string; caption?: string }>(slot: T): T {
-  const photo = photos[cursor++];
-  return { ...slot, src: photo.src, alt: photo.alt ?? slot.alt,
-    ...("caption" in slot ? { caption: photo.caption ?? slot.caption } : {}) };
-}
-export const birthdayConfig = {
-  ...defaults,
-  siteId: client.siteId,
-  sender: client.sender,
-  reveal: { ...defaults.reveal, message: client.messages.reveal ?? defaults.reveal.message },
-  introduction: { ...defaults.introduction, message: client.messages.introduction ?? defaults.introduction.message },
-  photoCarousel: { ...defaults.photoCarousel, photos: defaults.photoCarousel.photos.map((slot) => fill(slot)) },
-  gallery: { ...defaults.gallery, photos: defaults.gallery.photos.map((slot) => fill(slot)) },
-  scrapbook: { ...defaults.scrapbook, pages: defaults.scrapbook.pages.map((page, index) => ({
-    ...page, photos: page.photos.map((slot) => fill(slot)), notes: client.scrapbookNotes[index] ?? page.notes,
-  })) },
-  photoUniverse: { ...defaults.photoUniverse, photos: defaults.photoUniverse.photos.map((slot) => fill(slot)) },
-  audio: { ...defaults.audio, src: client.music.src ?? defaults.audio.src,
-    title: client.music.title ?? defaults.audio.title, artwork: client.photos[0].src },
-  closing: { ...defaults.closing, message: client.messages.closing ?? defaults.closing.message,
-    signature: client.messages.signature ?? defaults.closing.signature },
-};
 
+// Preserve section layouts; assign client content without changing frame geometry.
+export function buildBirthdayConfig(input: ClientConfig) {
+  const assigned = allocatePhotoSections(input.photos);
+  function fill<T extends { src: string; alt: string; caption?: string }>(slot: T, photo: ClientPhoto): T {
+    return { ...slot, src: photo.src, alt: photo.alt ?? slot.alt,
+      ...("caption" in slot ? { caption: photo.caption ?? slot.caption } : {}) };
+  }
+  return {
+    ...defaults, siteId: input.siteId, recipient: input.recipient, sender: input.sender,
+    reveal: { ...defaults.reveal, message: input.messages.reveal ?? defaults.reveal.message },
+    introduction: { ...defaults.introduction, message: input.messages.introduction ?? defaults.introduction.message },
+    photoCarousel: { ...defaults.photoCarousel, photos: defaults.photoCarousel.photos.map((slot, i) => fill(slot, assigned.carousel[i])) },
+    gallery: { ...defaults.gallery, photos: defaults.gallery.photos.map((slot, i) => fill(slot, assigned.memories[i])) },
+    scrapbook: { ...defaults.scrapbook, pages: defaults.scrapbook.pages.map((page, i) => ({
+      ...page, notes: input.scrapbookNotes[i] ?? page.notes,
+      photos: page.photos.map((slot, j) => fill(slot, assigned.scrapbook[i * 2 + j])),
+    })) },
+    photoUniverse: { ...defaults.photoUniverse, layoutPhotoCount: defaults.photoUniverse.photos.length,
+      photos: assigned.universe.map((photo, i) => ({
+        ...fill(defaults.photoUniverse.photos[i % defaults.photoUniverse.photos.length], photo),
+        id: "universe-slot-" + (i + 1),
+      })),
+    },
+    audio: { ...defaults.audio, src: input.music.src ?? defaults.audio.src, title: input.music.title ?? defaults.audio.title,
+      artwork: input.music.artwork ?? allClientPhotos(input.photos)[0].src,
+    },
+    closing: { ...defaults.closing, message: input.messages.closing ?? defaults.closing.message,
+      signature: input.messages.signature ?? defaults.closing.signature },
+  };
+}
+export const birthdayConfig = buildBirthdayConfig(client);
