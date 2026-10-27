@@ -583,7 +583,7 @@ body:has(dialog[open]) { overflow: hidden; }
 }
 
 @media (max-width: 480px) {
-  .birthday-carousel__controls { left: min(calc(6% + 53.5vw + 12px), calc(100% - 60px - clamp(88px,24vw,116px))); }
+  .birthday-carousel__controls { position: relative; inset: auto; align-self: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
